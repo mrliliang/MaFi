@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mafi.main.MainActivity" >
+    
+    <item
+        android:id="@+id/scan_btn"
+        android:showAsAction="ifRoom"
+        android:title="@string/scan_btn_text"
+        android:icon="@drawable/qr_scanner"/>
+
+<!--     <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/> -->
+
+</menu>

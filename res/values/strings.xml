@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MaFi</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="ssid">WiFiSSID</string>
+    <string name="password">WiFi密码</string>
+    <string name="sec_type_text">加密类型</string>
+    <string name="save_btn_text">保存为图片</string>
+    <string name="scan_btn_text">扫一扫</string>
+    <string name="title_activity_wifi_connect">Wi-Fi</string>
+    <string name="connect_btn_text">链接Wi-Fi</string>
+    
+    <string-array name="security_option">
+        <item>WPA/WPA2</item>
+        <item>WEP</item>
+        <item>无加密</item>
+    </string-array>
+
+</resources>
