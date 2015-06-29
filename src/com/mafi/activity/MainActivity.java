@@ -1,10 +1,21 @@
 package com.mafi.activity;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -15,6 +26,7 @@ import android.widget.EditText;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.zxing.WriterException;
 import com.mafi.main.R;
@@ -93,7 +105,14 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				
+				String ssid = ssidField.getText().toString();
+				if (ssid == null || "".equals(ssid.trim())) {
+					Toast.makeText(getApplicationContext(), "请输入SSID", 3000);
+					return;
+				}
+				Bitmap bitmap = ((BitmapDrawable)qrCodeImage.getDrawable()).getBitmap();
+				saveImageToGallery(getApplicationContext(), bitmap);
+				Toast.makeText(getApplicationContext(), "已保存到相册", 3000);
 			}
 		});
     }
@@ -146,11 +165,46 @@ public class MainActivity extends Activity {
 		}
     }
     
-    public boolean isExternalStorageWritable() {
+    private boolean isExternalStorageWritable() {
     	String state = Environment.getExternalStorageState();
     	if(Environment.MEDIA_MOUNTED.equals(state)) {
     		return true;
     	}
     	return false;
+    }
+    
+    private void saveImageToGallery(Context context, Bitmap bitmap) {
+    	if(!isExternalStorageWritable()) {
+    		Toast.makeText(getApplicationContext(), "无法访问存储设备", 3000);
+    		return;
+    	}
+    	
+    	File picDir = new File(Environment.getExternalStoragePublicDirectory(
+    			Environment.DIRECTORY_PICTURES),"MaFi");
+    	if(!picDir.exists()) {
+    		picDir.mkdir();
+    	}
+    	String picName = ssidField.getText().toString() + ".jpg";
+    	File file = new File(picDir, picName);
+    	try {
+    		FileOutputStream fos = new FileOutputStream(file);
+    		bitmap.compress(CompressFormat.JPEG, 100, fos);
+    		fos.flush();
+    		fos.close();
+    	} catch (FileNotFoundException e) {
+    		e.printStackTrace();
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	try {
+    		MediaStore.Images.Media.insertImage(getContentResolver(), 
+    				file.getAbsolutePath(), picName, null);
+    	} catch (FileNotFoundException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+    			Uri.fromFile(file)));
     }
 }
