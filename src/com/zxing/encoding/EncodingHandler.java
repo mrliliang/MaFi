@@ -3,6 +3,7 @@ package com.zxing.encoding;
 import java.util.Hashtable;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -29,6 +30,8 @@ public final class EncodingHandler {
 			for (int x = 0; x < width; x++) {
 				if (matrix.get(x, y)) {
 					pixels[y * width + x] = BLACK;
+				} else {
+					pixels[y * width + x] = Color.WHITE;
 				}
 			}
 		}

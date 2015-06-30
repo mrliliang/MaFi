@@ -18,6 +18,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -107,12 +108,14 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				String ssid = ssidField.getText().toString();
 				if (ssid == null || "".equals(ssid.trim())) {
-					Toast.makeText(getApplicationContext(), "请输入SSID", 3000);
+					Toast.makeText(getApplicationContext(), "请输入SSID", 
+							3000).show();
 					return;
 				}
 				Bitmap bitmap = ((BitmapDrawable)qrCodeImage.getDrawable()).getBitmap();
 				saveImageToGallery(getApplicationContext(), bitmap);
-				Toast.makeText(getApplicationContext(), "已保存到相册", 3000);
+				Toast.makeText(getApplicationContext(), "已保存到相册", 
+						3000).show();
 			}
 		});
     }
@@ -175,19 +178,21 @@ public class MainActivity extends Activity {
     
     private void saveImageToGallery(Context context, Bitmap bitmap) {
     	if(!isExternalStorageWritable()) {
-    		Toast.makeText(getApplicationContext(), "无法访问存储设备", 3000);
+    		Toast.makeText(getApplicationContext(), "无法访问存储设备", 
+    				3000).show();
     		return;
     	}
-    	
+   
     	File picDir = new File(Environment.getExternalStoragePublicDirectory(
     			Environment.DIRECTORY_PICTURES),"MaFi");
     	if(!picDir.exists()) {
     		picDir.mkdir();
     	}
     	String picName = ssidField.getText().toString() + ".jpg";
-    	File file = new File(picDir, picName);
+    	File picture = new File(picDir, picName);
+    	Log.i("Path", picture.getAbsolutePath());
     	try {
-    		FileOutputStream fos = new FileOutputStream(file);
+    		FileOutputStream fos = new FileOutputStream(picture);
     		bitmap.compress(CompressFormat.JPEG, 100, fos);
     		fos.flush();
     		fos.close();
@@ -199,12 +204,12 @@ public class MainActivity extends Activity {
     	
     	try {
     		MediaStore.Images.Media.insertImage(getContentResolver(), 
-    				file.getAbsolutePath(), picName, null);
+    				picture.getAbsolutePath(), picName, null);
     	} catch (FileNotFoundException e) {
     		e.printStackTrace();
     	}
     	
-    	context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-    			Uri.fromFile(file)));
+    	sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+    			Uri.parse("file://" + picture.getAbsolutePath())));
     }
 }
