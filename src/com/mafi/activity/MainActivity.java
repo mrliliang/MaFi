@@ -202,8 +202,9 @@ public class MainActivity extends Activity {
     		e.printStackTrace();
     	}
     	
+    	String path = null;
     	try {
-    		MediaStore.Images.Media.insertImage(getContentResolver(), 
+    		path = MediaStore.Images.Media.insertImage(getContentResolver(), 
     				picture.getAbsolutePath(), picName, null);
     	} catch (FileNotFoundException e) {
     		e.printStackTrace();
