@@ -8,14 +8,18 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.MediaStore.MediaColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -206,11 +210,42 @@ public class MainActivity extends Activity {
     	try {
     		path = MediaStore.Images.Media.insertImage(getContentResolver(), 
     				picture.getAbsolutePath(), picName, null);
+    		Log.i("PATH", path);
+    		path = getRealPathFromUri(getApplicationContext(), Uri.parse(path));
+    		Log.i("Real Path", path);
     	} catch (FileNotFoundException e) {
     		e.printStackTrace();
     	}
     	
-    	sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-    			Uri.parse("file://" + picture.getAbsolutePath())));
+    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+    		String[] paths = new String[]{path};
+    		MediaScannerConnection.scanFile(getApplicationContext(), paths, null, null);
+    	} else {
+    		Uri imageUri = Uri.parse("file://" + path);
+        	Log.i("URI", imageUri.toString());
+        	Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, imageUri);
+        	sendBroadcast(intent);
+    	}
+    }
+    
+    private String getRealPathFromUri(Context context, Uri uri) {
+    	if (null == uri) {
+    		return null;
+    	}
+    	Cursor c = context.getContentResolver().query(uri, null, null, null, null);
+    	String filePath = null;
+    	if (null == c) {
+    		throw new IllegalArgumentException("Query on" + uri + "returns null result.");
+    	}
+    	try {
+    		if (c.getCount() != 1 || !c.moveToFirst()) {
+    			
+    		} else {
+    			filePath = c.getString(c.getColumnIndexOrThrow(MediaColumns.DATA));
+    		}
+    	} finally {
+    		c.close();
+    	}
+    	return filePath;
     }
 }
