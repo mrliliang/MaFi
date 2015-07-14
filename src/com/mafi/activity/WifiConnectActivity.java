@@ -1,5 +1,6 @@
 package com.mafi.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +41,10 @@ public class WifiConnectActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wifi_connect);
+		
+		ActionBar actionBar = this.getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(false);
 		
 		ssidField = (EditText) this.findViewById(R.id.ssid);
 		passwordField = (EditText) this.findViewById(R.id.password);
@@ -98,10 +104,13 @@ public class WifiConnectActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		switch (id) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
 			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
-		return super.onOptionsItemSelected(item);
 	}
 	
 	private int convertSecurityType(String security) {

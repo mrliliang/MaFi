@@ -51,6 +51,8 @@ public final class ViewfinderView extends View {
   private final int laserColor;
   private final int resultPointColor;
   private int scannerAlpha;
+  private final int lineWidth = 6;
+  private final int lineLength = 50;
   private Collection<ResultPoint> possibleResultPoints;
   private Collection<ResultPoint> lastPossibleResultPoints;
 
@@ -94,18 +96,30 @@ public final class ViewfinderView extends View {
 
       // Draw a two pixel solid black border inside the framing rect
       paint.setColor(frameColor);
-      canvas.drawRect(frame.left, frame.top, frame.right + 1, frame.top + 2, paint);
-      canvas.drawRect(frame.left, frame.top + 2, frame.left + 2, frame.bottom - 1, paint);
-      canvas.drawRect(frame.right - 1, frame.top, frame.right + 1, frame.bottom - 1, paint);
-      canvas.drawRect(frame.left, frame.bottom - 1, frame.right + 1, frame.bottom + 1, paint);
+//      canvas.drawRect(frame.left, frame.top, frame.right + 1, frame.top + 2, paint);
+//      canvas.drawRect(frame.left, frame.top + 2, frame.left + 2, frame.bottom - 1, paint);
+//      canvas.drawRect(frame.right - 1, frame.top, frame.right + 1, frame.bottom - 1, paint);
+//      canvas.drawRect(frame.left, frame.bottom - 1, frame.right + 1, frame.bottom + 1, paint);
+      
+      canvas.drawRect(frame.left, frame.top, lineWidth + frame.left, lineLength + frame.top, paint);
+      canvas.drawRect(frame.left, frame.top, lineLength + frame.left, (lineWidth + frame.top), paint);
+      canvas.drawRect(frame.right - lineLength, frame.top, frame.right, lineWidth + frame.top, paint);
+      canvas.drawRect(frame.right - lineWidth, frame.top, frame.right, (lineLength + frame.top), paint);
+      canvas.drawRect(frame.left, frame.bottom - lineLength, lineWidth + frame.left, frame.bottom, paint);
+      canvas.drawRect(frame.left, frame.bottom - lineWidth, frame.left + lineLength, frame.bottom, paint);
+      canvas.drawRect(frame.right - lineLength, frame.bottom - lineWidth, frame.right, frame.bottom, paint);
+      canvas.drawRect(frame.right - lineWidth, frame.bottom - lineLength, frame.right, frame.bottom, paint);
 
       // Draw a red "laser scanner" line through the middle to show decoding is active
-      paint.setColor(laserColor);
+      //paint.setColor(laserColor);
       paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
       scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
-      int middle = frame.height() / 2 + frame.top;
-      canvas.drawRect(frame.left + 2, middle - 1, frame.right - 1, middle + 2, paint);
-
+      int vmiddle = frame.height() / 2 + frame.top;
+      int hmiddle = frame.width() / 2 + frame.left;
+//      canvas.drawRect(frame.left + 2, middle - 1, frame.right - 1, middle + 2, paint);
+      canvas.drawRect(hmiddle - 20, vmiddle - 1, hmiddle + 20,vmiddle + 1, paint);
+      canvas.drawRect(hmiddle - 1, vmiddle - 20, hmiddle + 1,vmiddle + 20, paint);
+      
       Collection<ResultPoint> currentPossible = possibleResultPoints;
       Collection<ResultPoint> currentLast = lastPossibleResultPoints;
       if (currentPossible.isEmpty()) {

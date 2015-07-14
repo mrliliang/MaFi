@@ -3,6 +3,7 @@ package com.zxing.activity;
 import java.io.IOException;
 import java.util.Vector;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -13,6 +14,8 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -45,7 +48,6 @@ public class CaptureActivity extends Activity implements Callback {
 	private boolean playBeep;
 	private static final float BEEP_VOLUME = 0.10f;
 	private boolean vibrate;
-	private Button cancelScanButton;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -55,9 +57,12 @@ public class CaptureActivity extends Activity implements Callback {
 		//ViewUtil.addTopView(getApplicationContext(), this, R.string.scan_card);
 		CameraManager.init(getApplication());
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
-		cancelScanButton = (Button) this.findViewById(R.id.btn_cancel_scan);
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
+		
+		ActionBar actionBar = this.getActionBar();
+		actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -81,15 +86,6 @@ public class CaptureActivity extends Activity implements Callback {
 		}
 		initBeepSound();
 		vibrate = true;
-		
-		//quit the scan view
-		cancelScanButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				CaptureActivity.this.finish();
-			}
-		});
 	}
 
 	@Override
@@ -222,5 +218,16 @@ public class CaptureActivity extends Activity implements Callback {
 			mediaPlayer.seekTo(0);
 		}
 	};
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
 }

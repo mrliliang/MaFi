@@ -131,7 +131,7 @@ public final class CameraManager {
 
       //FIXME
  //     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-      //ÊÇ·ñÊ¹ÓÃÇ°µÆ
+      //ï¿½Ç·ï¿½Ê¹ï¿½ï¿½Ç°ï¿½ï¿½
 //      if (prefs.getBoolean(PreferencesActivity.KEY_FRONT_LIGHT, false)) {
 //        FlashlightManager.enableFlashlight();
 //      }

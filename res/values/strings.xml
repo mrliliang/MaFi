@@ -10,7 +10,8 @@
     <string name="save_btn_text">保存为图片</string>
     <string name="scan_btn_text">扫一扫</string>
     <string name="title_activity_wifi_connect">Wi-Fi</string>
-    <string name="connect_btn_text">链接Wi-Fi</string>
+    <string name="connect_btn_text">连接Wi-Fi</string>
+    <string name="scan_text">扫一扫</string>
     
     <string-array name="security_option">
         <item>WPA/WPA2</item>
