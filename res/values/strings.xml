@@ -12,6 +12,8 @@
     <string name="title_activity_wifi_connect">Wi-Fi</string>
     <string name="connect_btn_text">连接Wi-Fi</string>
     <string name="scan_text">扫一扫</string>
+    <string name="flash_switch_on">开灯</string>
+    <string name="flash_switch_off">关灯</string>
     
     <string-array name="security_option">
         <item>WPA/WPA2</item>

@@ -17,6 +17,7 @@
 package com.zxing.camera;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Build;
@@ -57,7 +58,14 @@ final class CameraConfigurationManager {
     Display display = manager.getDefaultDisplay();
     screenResolution = new Point(display.getWidth(), display.getHeight());
     Log.d(TAG, "Screen resolution: " + screenResolution);
-    cameraResolution = getCameraResolution(parameters, screenResolution);
+    Point screenResolutionForCamera = new Point();
+    screenResolutionForCamera.x = screenResolution.x;
+    screenResolutionForCamera.y = screenResolution.y;
+    if (screenResolution.x < screenResolution.y) {
+    	screenResolutionForCamera.x = screenResolution.y;
+    	screenResolutionForCamera.y = screenResolution.x;
+    }
+    cameraResolution = getCameraResolution(parameters, screenResolutionForCamera);
     Log.d(TAG, "Camera resolution: " + screenResolution);
   }
 
@@ -75,7 +83,20 @@ final class CameraConfigurationManager {
     setZoom(parameters);
     //setSharpness(parameters);
     //modify here
-    camera.setDisplayOrientation(90);
+    if (Build.VERSION.SDK_INT >= 8) {
+    	camera.setDisplayOrientation(90);
+    } else {
+    	if (context.getResources().getConfiguration().orientation == 
+    			Configuration.ORIENTATION_PORTRAIT) {
+    		parameters.set("orientation", "portrait");
+    		parameters.set("rotation", 90);
+    	}
+    	if(context.getResources().getConfiguration().orientation ==
+    			Configuration.ORIENTATION_LANDSCAPE) {
+    		parameters.set("orientation", "landscape");
+    		parameters.set("rotation", 90);
+    	}
+    }
     camera.setParameters(parameters);
   }
 

@@ -6,7 +6,7 @@
         android:id="@+id/scan_btn"
         android:showAsAction="ifRoom"
         android:title="@string/scan_text"
-        android:icon="@drawable/qr_scanner"/>
+        android:icon="@drawable/scan"/>
 
 <!--     <item
         android:id="@+id/action_settings"

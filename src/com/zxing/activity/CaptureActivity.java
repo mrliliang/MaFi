@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -230,4 +231,9 @@ public class CaptureActivity extends Activity implements Callback {
 		}
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		//this.getMenuInflater().inflate(R.menu.capture, menu);
+		return true;
+	}	
 }
